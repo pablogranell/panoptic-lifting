@@ -172,7 +172,7 @@ def visualize_panoptic_outputs(p_rgb, p_semantics, p_instances, p_depth, rgb, se
     boundaries_img_instances = get_boundary_mask(p_instances.cpu().view(H, W))
     colored_img_instance[boundaries_img_instances.reshape(-1) > 0, :] = 0
     thing_mask = torch.logical_not(sum(p_semantics == s for s in thing_classes).bool())
-    colored_img_instance[thing_mask, :] = p_rgb.cpu()[thing_mask, :]
+    colored_img_instance[thing_mask, :] = p_rgb.cpu()[thing_mask.cpu(), :]
     img_instances = colored_img_instance.view(H, W, 3).permute(2, 0, 1) * alpha + img * (1 - alpha)
     if rgb is not None and semantics is not None and instances is not None:
         img_gt = rgb.view(H, W, 3).permute(2, 0, 1).cpu()
