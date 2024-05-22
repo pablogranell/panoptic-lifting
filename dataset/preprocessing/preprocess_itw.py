@@ -15,7 +15,7 @@ import os
 from dataset.preprocessing.preprocess_scannet import create_validation_set, map_panoptic_coco, visualize_mask_folder, get_keyframe_indices, \
     from_ours_to_replica_traj_w_c, create_instances_for_dmnerf, get_thing_semantics
 
-raw_path = Path("/cluster/gimli/ysiddiqui/nerf-lightning-data/itw/raw/")
+raw_path = Path("/kaggle/temp/panoptic-lifting/data/itw/raw/")
 
 
 def copy_color(src_folder, fraction):
