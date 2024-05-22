@@ -29,21 +29,14 @@ def copy_color(src_folder, fraction):
 
 
 def rename_and_copy_transforms(src_folder):
-    raw_path = Path(src_folder).parent
     transform_file = raw_path / src_folder.stem / "transforms.json"
     transforms = json.loads(Path(transform_file).read_text())
     color_folder = raw_path / src_folder.stem / "color"
-    image_files = sorted([x.stem for x in color_folder.iterdir() if x.is_file()], key=lambda x: int(x) if x.isnumeric() else x)
+    image_files = sorted([x.stem for x in color_folder.iterdir()], key=lambda x: int(x) if x.isnumeric() else x)
     for idx, frame in enumerate(transforms['frames']):
-        frame_stem = Path(frame['file_path']).stem
-        # Adjust the filename to start from '0001'
-        if frame_stem in image_files:
-            new_file_name = f"{image_files.index(frame_stem) + 1:04d}.jpg"
-            transforms['frames'][idx]['file_path'] = new_file_name
-        else:
-            raise ValueError(f"'{frame_stem}' is not in the list of image files")
-            
-    (src_folder / "transforms.json").write_text(json.dumps(transforms, indent=4))
+        transforms['frames'][idx]['file_path'] = f"{image_files.index(Path(frame['file_path']).stem) + 1:04d}.jpg"
+
+    (src_folder / "transforms.json").write_text(json.dumps(transforms))
 
 
 def create_poses_without_undistortion(src_folder):
