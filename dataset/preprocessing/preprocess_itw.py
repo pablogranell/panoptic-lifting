@@ -34,7 +34,8 @@ def rename_and_copy_transforms(src_folder):
     color_folder = raw_path / src_folder.stem / "color"
     image_files = sorted([x.stem for x in color_folder.iterdir()], key=lambda x: int(x) if x.isnumeric() else x)
     for idx, frame in enumerate(transforms['frames']):
-        transforms['frames'][idx]['file_path'] = f"{image_files.index(Path(frame['file_path']).stem):04d}.jpg"
+        transforms['frames'][idx]['file_path'] = f"{image_files.index(Path(frame['file_path']).stem) + 1:04d}.jpg"
+
     (src_folder / "transforms.json").write_text(json.dumps(transforms))
 
 
