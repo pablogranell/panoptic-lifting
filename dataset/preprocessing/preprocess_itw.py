@@ -35,13 +35,14 @@ def rename_and_copy_transforms(src_folder):
     color_folder = raw_path / src_folder.stem / "color"
     image_files = sorted([x.stem for x in color_folder.iterdir() if x.is_file()], key=lambda x: int(x) if x.isnumeric() else x)
     for idx, frame in enumerate(transforms['frames']):
-        # Assuming the filenames in the color folder start from '0001'
-        file_stem = f"{idx + 1:04d}"  # Create file stems starting from '0001'
-        if file_stem in image_files:
-            new_file_name = f"{file_stem}.jpg"
+        frame_stem = Path(frame['file_path']).stem
+        # Adjust the filename to start from '0001'
+        if frame_stem in image_files:
+            new_file_name = f"{image_files.index(frame_stem) + 1:04d}.jpg"
             transforms['frames'][idx]['file_path'] = new_file_name
         else:
-            raise ValueError(f"'{file_stem}' is not in the list of image files")
+            raise ValueError(f"'{frame_stem}' is not in the list of image files")
+            
     (src_folder / "transforms.json").write_text(json.dumps(transforms, indent=4))
 
 
