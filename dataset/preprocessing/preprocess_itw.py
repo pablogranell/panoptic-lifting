@@ -8,6 +8,7 @@ from PIL import Image
 
 from pathlib import Path
 import json
+import subprocess
 import numpy as np
 from tqdm import tqdm
 import os
@@ -204,6 +205,19 @@ if __name__ == "__main__":
     # create validation set (15% to 25%)
     create_validation_set(dest, 0.15)
     # make sure to run mask2former before this step
+    os.chdir("/kaggle/temp/Mask2Former/demo/")  # Change to the Mask2Former directory
+    process = subprocess.Popen([
+        'python', 'demo.py',
+        '--config-file', '../configs/coco/panoptic-segmentation/swin/maskformer2_swin_large_IN21k_384_bs16_100ep.yaml',
+        '--input', '/kaggle/temp/panoptic-lifting/data/itw/raw/test/color',
+        '--output', '/kaggle/temp/panoptic-lifting/data/itw/raw/test/panoptic/',
+        '--predictions', '/kaggle/temp/panoptic-lifting/data/itw/raw/test/panoptic/',
+        '--opts', 'MODEL.WEIGHTS', '../checkpoints/model_final_f07440.pkl'
+    ])
+    #Wait for Mask2Former to run
+    process.wait()
+    #Change to the previous working directory to avoid problems
+    os.chdir("/kaggle/temp/panoptic-lifting")
     # run mask2former segmentation data mapping
     map_panoptic_coco(dest, sc_classes='extended')
     # visualize labels
