@@ -181,6 +181,7 @@ def visualize_panoptic_outputs(p_rgb, p_semantics, p_instances, p_depth, rgb, se
         img_semantics_gt[:, boundaries_img_semantics_gt > 0] = 0
         colored_img_instance_gt = distinct_colors.apply_colors_fast_torch(instances.cpu()).float()
         boundaries_img_instances_gt = get_boundary_mask(instances.cpu().view(H, W))
+        instances = rs_instances.to(cpu)
         colored_img_instance_gt[instances == 0, :] = rgb.cpu()[instances == 0, :]
         img_instances_gt = colored_img_instance_gt.view(H, W, 3).permute(2, 0, 1) * alpha + img_gt * (1 - alpha)
         img_instances_gt[:, boundaries_img_instances_gt > 0] = 0
